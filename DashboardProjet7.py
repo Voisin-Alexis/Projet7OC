@@ -1,4 +1,4 @@
-!pip install dash
+pip install dash
 
 import dash
 from dash import dcc
