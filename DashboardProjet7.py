@@ -52,7 +52,7 @@ dfIdClientIndex = joblib.load(cheminFichierJoblib + 'dfIdClientIndex.joblib')
 
 predictionStreamlit = joblib.load(cheminFichierJoblib + 'predictionStreamlit.joblib')
 predictionProbaStreamlit = joblib.load(cheminFichierJoblib + 'predictionProbaStreamlit.joblib')
-y_predProba_lgbmHPSeuil = joblib.load(r'C:\Users\Alexis\y_predProba_lgbmHPSeuil.joblib')
+y_predProba_lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'y_predProba_lgbmHPSeuil.joblib')
 
 lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'lgbmHPSeuil.joblib')
 
