@@ -54,7 +54,7 @@ predictionStreamlit = joblib.load(cheminFichierJoblib + 'predictionStreamlit.job
 predictionProbaStreamlit = joblib.load(cheminFichierJoblib + 'predictionProbaStreamlit.joblib')
 y_predProba_lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'y_predProba_lgbmHPSeuil.joblib')
 
-lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'lgbmHPSeuil.joblib')
+#lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'lgbmHPSeuil.joblib')
 
 image_filenameG = 'featureglobal.png'
 encoded_imageG = base64.b64encode(open(image_filenameG, 'rb').read())
