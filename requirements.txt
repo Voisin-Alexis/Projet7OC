@@ -1,5 +1,5 @@
 Dash == 2.0.0
-dash split pane == 0.0.1
+dash_split_pane == 0.0.1
 pandas == 1.2.4
 numpy == 1.19.2
 seaborn == 0.11.0
