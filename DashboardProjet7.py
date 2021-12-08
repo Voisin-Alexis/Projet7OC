@@ -36,6 +36,7 @@ import flask
 from flask import Flask, render_template, jsonify
 import json
 import requests
+from gevent.pywsgi import WSGIServer
 
 cheminFichierJoblib = './fichierJoblib/'
 
@@ -404,4 +405,5 @@ def plotfiguregauge(id):
 #==========================================================================================================================#
 
 if __name__ == "__main__":
-    app.run_server(debug = True)
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
