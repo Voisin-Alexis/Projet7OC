@@ -1,0 +1,21 @@
+name: P7_03_dashboard
+dependencies:
+  -python = 3.8.5
+  -pip:
+   - dash
+   - dash_split_pane
+   - pandas
+   - numpy
+   - seaborn
+   - shap
+   - scikit-learn
+   - joblib
+   - flask
+   - requests
+   - dash_daq
+   - click
+   - pip
+   - gevent
+   - plotly
+   - dash-renderer
+   - gunicorn
