@@ -74,6 +74,7 @@ print("Le seuil optimal est égal à", round(optimal_threshold, 3))
 
 app = dash.Dash(__name__)
 app.title = "Dashboard Projet 7" #Assigning title to be displayed on tab
+server = app.server
 
 app.layout = html.Div(
     children=[
@@ -405,4 +406,4 @@ def plotfiguregauge(id):
 #==========================================================================================================================#
 
 if __name__ == "__main__":
-    app.run_server(debug = False)
+    app.run_server(debug = True)
