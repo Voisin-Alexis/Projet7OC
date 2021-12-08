@@ -384,24 +384,24 @@ def plotfiguregauge(id):
 
 
 
-#@app.callback(
-#    [
-#         Output('figurefeaturelocal', 'src')
-#    ],
-#    [
-#        Input("id-client", "value")
-#    ]
-#)
-#
-#def plotfigurefeature(id):
-#    
-#    values =  X_testID2[X_testID2['ID'] == id]['index'].values #####
-#    
-#    shap.force_plot(explainer.expected_value[1], shap_values[1][int(values)], X_test.iloc[[int(values)]], show=False, matplotlib=True)
-#    plt.savefig(image_filename)
-#    src = ouvertureImageFilename(image_filename)
-#    
-#    return [src]
+@app.callback(
+    [
+         Output('figurefeaturelocal', 'src')
+    ],
+    [
+        Input("id-client", "value")
+    ]
+)
+
+def plotfigurefeature(id):
+    
+    values =  X_testID2[X_testID2['ID'] == id]['index'].values #####
+    
+    shap.force_plot(explainer.expected_value[1], shap_values[1][int(values)], X_test.iloc[[int(values)]], show=False, matplotlib=True)
+    plt.savefig(image_filename)
+    src = ouvertureImageFilename(image_filename)
+    
+    return [src]
 
 #==========================================================================================================================#
 
