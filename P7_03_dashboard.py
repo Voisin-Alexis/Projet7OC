@@ -145,7 +145,7 @@ app.layout = html.Div(
                             id="id-client",
                             options=[
                                 {"label": IDclient, "value": IDclient}
-                                for IDclient in listeIndexSort
+                                for IDclient in listeid1500
                             ],
                             value=listeIndexSort[0],
                             clearable=False,
@@ -266,32 +266,259 @@ app.layout = html.Div(
                    'text-align': 'center',
                    'margin': '25px auto 0 auto'}, 
         ),        
-        html.Div(
-            children=[
-                html.Table([
-                    html.Tr([html.Td(['Les meilleurs features Locales']), html.Td(id='featurelocal')]),
-                ]),                
-            ],                
-            style={'color': '#000000',                          
-                   'display': 'flex',
-                   'justify-content': 'space-evenly',
-                   'text-align': 'center',
-                   'margin': '25px auto 0 auto'},       
-                                   
+        #html.Div(
+        #    children=[
+        #        html.Table([
+        #            html.Tr([html.Td(['Les meilleurs features Locales']), html.Td(id='featurelocal')]),
+        #        ]),                
+        #    ],                
+        #    style={'color': '#000000',                          
+        #           'display': 'flex',
+        #           'justify-content': 'space-evenly',
+        #           'text-align': 'center',
+        #           'margin': '25px auto 0 auto'},       
+        #                           
+        #),
+        #html.Div(
+        #    children=[
+        #         html.Img(id="figurefeaturelocal", src = ouvertureImageFilename(image_filename), height='150', width='750'),
+        #    ],
+        #    style={'color': '#000000',                          
+        #           'display': 'flex',
+        #           'justify-content': 'space-evenly',
+        #           'text-align': 'center',
+        #           'margin': '25px auto 0 auto'}, 
+        #),   
+       html.Div(
+            children = [
+                 html.H6(
+                     children='Graphique des différentes features', 
+                     style={'color': '#FFFFFF',
+                            'fontSize': '24px',
+                            'font-weight': 'bold',
+                            'text-align': 'center',
+                            'margin': '0 auto'},
+                 ),
+                 html.P(
+                    children='Nous allons tracer les graphes de distribution des 2 features selectionnées, '
+                             'un graphe d\'analyse bivariée entre ces 2 features, ainsi que la distibution '
+                             'de la variable globale.',
+                    style={'color': '#CFCFCF',                          
+                           'max-width': '500px',
+                           'text-align': 'center',
+                           'margin': '4px auto'},
+                ),
+            ],
+             style={'background-color': '#222222',
+                    'height': '200px',
+                    'padding': '16px 0 0 0'},
         ),
         html.Div(
             children=[
-                 html.Img(id="figurefeaturelocal", src = ouvertureImageFilename(image_filename), height='150', width='750'),
+                html.Div(
+                    children=[
+                        html.Div(children="Feature1", className="menu-title"),
+                        dcc.Dropdown(
+                            id="modeleFeature1",
+                            options=[
+                                {"label": feature1, "value": feature1}
+                                for feature1 in listeClassementVariable
+                            ],
+                            value='CNT_CHILDREN',
+                            clearable=False,
+                            style={'width': '300px'}, 
+                        ),
+                    ],
+                ),
+                html.Div(
+                    children=[
+                        html.Div(children="Feature2", className="menu-title"),
+                        dcc.Dropdown(
+                            id="modeleFeature2",
+                            options=[
+                                {"label": feature2, "value": feature2}
+                                for feature2 in listeClassementVariable
+                            ],
+                            value='AMT_INCOME_TOTAL',
+                            clearable=False,
+                            searchable=False,
+                            style={'width': '300px'}, 
+                        ),
+                    ],
+                ),
+                html.Div(
+                    children=[
+                        html.Div(children="Identifiant du client", className="menu-title"),
+                        dcc.Dropdown(
+                            id="id-client1500",
+                            options=[
+                                {"label": IDclient, "value": IDclient}
+                                for IDclient in listeid1500
+                            ],
+                            value=listeid1500[0],
+                            clearable=False,
+                            searchable=False,
+                            style={'width': '275px'}, 
+                        ),
+                    ],
+                ),
             ],
-            style={'color': '#000000',                          
+            style={'background-color': '#FFFFFF',
+                   'height': '100px',
+                   'width': '975px',
+                   'display': 'flex',
+                   'justify-content': 'space-evenly',
+                   'margin': '-80px auto 0 auto',
+                   'box-shadow': '0 4px 6px 0 rgba(0, 0, 0, 0.18)',
+                   'padding-top': '24px'},
+        ),
+        html.Div(
+            children=[
+                html.Div(
+                    children=[
+                        html.H6(children = 'La distribution de la feature1',
+                                style={'color': '#000000',
+                                       'fontSize': '15px',                                   
+                                       'text-align': 'center'                                       
+                                      },
+                        ),
+                        html.Div(
+                            children=[
+                                 dcc.Graph(id="figuredistributionfeature1"),
+                            ],
+                        ),
+                    ], 
+                ),                
+                html.Div(
+                    children=[
+                        html.H6(children = 'La distribution de la feature2',
+                                style={'color': '#000000',
+                                       'fontSize': '15px',                                     
+                                       'text-align': 'center'
+                                      },
+                        ),
+                        html.Div(
+                            children=[
+                                 dcc.Graph(id="figuredistributionfeature2"),
+                            ], 
+                        ),
+                    ],
+                ), 
+                html.Div(
+                    children=[
+                        html.H6(children = 'Analyse bi-variée entre les 2 features selectionnées',
+                                style={'color': '#000000',
+                                       'fontSize': '15px',
+                                       'text-align': 'center'
+                                      },
+                        ),
+                        html.Div(
+                            children=[
+                                dcc.Graph(id="figureanalysebivariee"),
+                            ], 
+                        ),
+                    ],
+                ),
+                html.Div(
+                    children=[
+                        html.H6(children = 'Distribution de la feature globale',
+                                style={'color': '#000000',
+                                       'fontSize': '15px',
+                                       'text-align': 'center'
+                                      },
+                        ),
+                        html.Div(
+                            children=[
+                                dcc.Graph(id="figuredistributionglobale"),
+                            ], 
+                        ),
+                    ],
+                ),
+            ],
+            style={'display': 'flex', 
+                   'justify-content': 'space-evenly', 
+                   'flex-direction': 'row',
+                   'margin': '0px auto 0 auto'
+                   },
+        ),
+        html.Div(
+            children = [
+                 html.H6(
+                     children='Prédiction de prêt de crédit', 
+                     style={'color': '#FFFFFF',
+                            'fontSize': '24px',
+                            'font-weight': 'bold',
+                            'text-align': 'center',
+                            'margin': '0 auto'},
+                 ),
+                 html.P(
+                    children='Dans cette partie nous allons faire appel à l\'API, qui fera appel à son tour '
+                             'au modèle selectionné pour nous renseigner.',
+                    style={'color': '#CFCFCF',                          
+                           'max-width': '500px',
+                           'text-align': 'center',
+                           'margin': '4px auto'},
+                ),
+                html.P(
+                    children='(Avec modèle optimisé et changement du seuil optimal (0.10))',
+                    style={'color': '#CFCFCF',                          
+                           'max-width': '500px',
+                           'text-align': 'center',
+                           'margin': '4px auto'},
+                ),
+            ],
+             style={'background-color': '#222222',
+                    'height': '200px',
+                    'padding': '16px 0 0 0'},
+        ),
+        html.Div(
+            children=[
+                html.Div(
+                    children=[
+                        html.Div(children="Identifiant du client", className="menu-title"),
+                        dcc.Dropdown(
+                            id="id-clientAPI",
+                            options=[
+                                {"label": IDclientAPI, "value": IDclientAPI}
+                                for IDclientAPI in listeid1500
+                            ],
+                            value=listeid1500[0],
+                            clearable=False,
+                            searchable=False,
+                            style={'width': '275px'}, 
+                        ),
+                    ],
+                ),
+            ],
+            style={'background-color': '#FFFFFF',
+                   'height': '100px',
+                   'width': '550px',
+                   'display': 'flex',
+                   'justify-content': 'space-evenly',
+                   'margin': '-80px auto 0 auto',
+                   'box-shadow': '0 4px 6px 0 rgba(0, 0, 0, 0.18)',
+                   'padding-top': '24px'
+                 },
+        ),
+        html.Div(
+            children=[
+                html.Div(
+                    children=[
+                        html.Table([
+                            #html.Tr([html.Td(['Confidence: ']), html.Td(id='confidenceAPI')]),
+                            html.Tr([html.Td(['Prediction: ']), html.Td(id='predictionAPI')])                            
+                        ]),
+                    ], 
+                    style={'color': '#000000',                          
                    'display': 'flex',
                    'justify-content': 'space-evenly',
                    'text-align': 'center',
-                   'margin': '25px auto 0 auto'}, 
-        ),   
+                   'margin': '25px auto 0 auto'},
+                ),
+            ],
+        ),
     ],
 )
-
 
 
 @app.callback(
@@ -384,24 +611,116 @@ def plotfiguregauge(id):
 
 
 
+#@app.callback(
+#    [
+#         Output('figurefeaturelocal', 'src')
+#    ],
+#    [
+#        Input("id-client", "value")
+#    ]
+#)
+#
+#def plotfigurefeature(id):
+#    
+#    values =  X_testID2[X_testID2['ID'] == id]['index'].values #####
+#    
+#    shap.force_plot(explainer.expected_value[1], shap_values[1][int(values)], X_test.iloc[[int(values)]], show=False, matplotlib=True)
+#    plt.savefig(image_filename)
+#    src = ouvertureImageFilename(image_filename)
+#    
+#    return [src]
 @app.callback(
     [
-         Output('figurefeaturelocal', 'src')
+        Output('figuredistributionfeature1', 'figure'),
+        Output('figuredistributionfeature2', 'figure'),
+        Output('figuredistributionglobale', 'figure'),
     ],
     [
-        Input("id-client", "value")
+        Input("id-client1500", "value"),
+        Input("modeleFeature1", "value"),
+        Input("modeleFeature2", "value"),
     ]
 )
 
-def plotfigurefeature(id):
+def plotfiguremodelefeature(id, modeleFeature1, modeleFeature2):
     
-    values =  X_testID2[X_testID2['ID'] == id]['index'].values #####
     
-    shap.force_plot(explainer.expected_value[1], shap_values[1][int(values)], X_test.iloc[[int(values)]], show=False, matplotlib=True)
-    plt.savefig(image_filename)
-    src = ouvertureImageFilename(image_filename)
+    data1 = px.histogram(train_dataWNaN50F1500L, x = modeleFeature1, color = "TARGET",
+                   marginal = "box", 
+                   hover_data=train_dataWNaN50F1500L.columns)
     
-    return [src]
+    data2 = px.histogram(train_dataWNaN50F1500L, x = modeleFeature2, color = "TARGET",
+                   marginal = "box", 
+                   hover_data=train_dataWNaN50F1500L.columns)
+    
+    dataglobale = px.histogram(train_dataWNaN50F1500L, x = 'TARGET_NEIGHBORS_500_MEAN', color = "TARGET",
+                   marginal = "box", 
+                   hover_data=train_dataWNaN50F1500L.columns)
+    
+    data1.update_layout(width = 350, height = 350)
+    
+    data2.update_layout(width = 350, height = 350)
+    
+    dataglobale.update_layout(width = 350, height = 350)
+    
+    return data1, data2, dataglobale
+
+@app.callback(
+    [
+        Output('figureanalysebivariee', 'figure')
+    ],
+    [
+        Input("id-client1500", "value"),
+        Input("modeleFeature1", "value"),
+        Input("modeleFeature2", "value"),
+    ]
+)
+
+def plotfiguremodelefeature(id, modeleFeature1, modeleFeature2):
+
+    x1 = train_dataWNaN50F1500L[modeleFeature1]
+    y1 = train_dataWNaN50F1500L[modeleFeature2]
+
+    x2 =  train_dataWNaN50F1500L[train_dataWNaN50F1500L['SK_ID_CURR'] == id][modeleFeature1].values
+    y2 =  train_dataWNaN50F1500L[train_dataWNaN50F1500L['SK_ID_CURR'] == id][modeleFeature2].values
+    
+    fig = go.Figure(data=go.Scatter(x = x1,
+                                y = y1,
+                                mode = 'markers',
+                                marker_color = train_dataWNaN50F1500L['Score prediction'],
+                                name = 'Bleu => 0 et Jaune => 1'))
+
+    fig.add_trace(go.Scatter(x = x2, y = y2,
+                        mode = 'markers',
+                        marker_color = 'red',
+                        name = 'Client'))
+    
+    fig.update_layout(width = 450, height = 350)
+    
+    return [fig]
+
+@app.callback(
+    [
+         #Output('confidenceAPI', 'children'),
+         Output('predictionAPI', 'children')
+    ],
+    [
+        Input("id-clientAPI", "value")
+    ]
+)
+
+def prediction(id):
+    
+    API_URL = 'https://apimodeleprojet7.herokuapp.com/'
+    data_mean = API_URL + "/predictionModeleClient?id=" + str(id)
+    #print(data_mean)
+    response = requests.get(data_mean)
+    content = json.loads(response.content.decode('utf-8'))
+    
+    #confidence = content[0]['confidence']
+    prediction = content[0]['prediction']
+
+    return [prediction]
 
 #==========================================================================================================================#
 
