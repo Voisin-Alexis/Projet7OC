@@ -72,6 +72,10 @@ optimal_threshold = 1 - thresholds[optimal_idx]
 
 print("Le seuil optimal est égal à", round(optimal_threshold, 3))
 
+listeClassementVariable = joblib.load(cheminFichierJoblib + 'listeClassementVariable.joblib')
+listeid1500 = joblib.load(cheminFichierJoblib + 'listeid1500.joblib')
+train_dataWNaN50F1500L = joblib.load(cheminFichierJoblib + 'train_dataWNaN50F1500L.joblib')
+
 app = dash.Dash(__name__)
 app.title = "Dashboard Projet 7" #Assigning title to be displayed on tab
 server = app.server
