@@ -149,9 +149,9 @@ app.layout = html.Div(
                             id="id-client",
                             options=[
                                 {"label": IDclient, "value": IDclient}
-                                for IDclient in listeid1500
+                                for IDclient in listeidSort
                             ],
-                            value=listeIndexSort[0],
+                            value=listeidSort[0],
                             clearable=False,
                             searchable=False,
                             style={'width': '275px'}, 
@@ -190,7 +190,7 @@ app.layout = html.Div(
                             html.Tr([html.Td(['Revenu: ']), html.Td(id='amtincometotal')]),
                             html.Tr([html.Td(['Montant du crédit: ']), html.Td(id='amtcredit')]),
                             html.Tr([html.Td(['Annuité de prêt: ']), html.Td(id='amtannuity')]),
-                            html.Tr([html.Td(['Durée du remboursement: ']), html.Td(id='dureeremboursement')]),                       
+                            html.Tr([html.Td(['Durée du remboursement: ']), html.Td(id='dureeremboursement')]),                            
                         ]),
                     ],                            
                 ),
@@ -612,9 +612,6 @@ def plotfiguregauge(id):
     
     return [go.Figure(data = figureGauge)]
 
-
-
-
 #@app.callback(
 #    [
 #         Output('figurefeaturelocal', 'src')
@@ -633,6 +630,7 @@ def plotfiguregauge(id):
 #    src = ouvertureImageFilename(image_filename)
 #    
 #    return [src]
+
 @app.callback(
     [
         Output('figuredistributionfeature1', 'figure'),
