@@ -293,7 +293,7 @@ app.layout = html.Div(
         #           'text-align': 'center',
         #           'margin': '25px auto 0 auto'}, 
         #),   
-       html.Div(
+        html.Div(
             children = [
                  html.H6(
                      children='Graphique des différentes features', 
@@ -434,6 +434,60 @@ app.layout = html.Div(
                         html.Div(
                             children=[
                                 dcc.Graph(id="figuredistributionglobale"),
+                            ], 
+                        ),
+                    ],
+                ),
+            ],
+            style={'display': 'flex', 
+                   'justify-content': 'space-evenly', 
+                   'flex-direction': 'row',
+                   'margin': '0px auto 0 auto'
+                   },
+        ),  
+        html.Div(
+            children=[
+                html.Div(
+                    children=[
+                        html.H6(children = 'Histogramme de densité de la feature1',
+                                style={'color': '#000000',
+                                       'fontSize': '15px',                                   
+                                       'text-align': 'center'                                       
+                                      },
+                        ),
+                        html.Div(
+                            children=[
+                                 dcc.Graph(id="figuredistributionfeature1densite"),
+                            ],
+                        ),
+                    ], 
+                ),                
+                html.Div(
+                    children=[
+                        html.H6(children = 'Histogramme de densité de la feature2',
+                                style={'color': '#000000',
+                                       'fontSize': '15px',                                     
+                                       'text-align': 'center'
+                                      },
+                        ),
+                        html.Div(
+                            children=[
+                                 dcc.Graph(id="figuredistributionfeature2densite"),
+                            ], 
+                        ),
+                    ],
+                ),
+                html.Div(
+                    children=[
+                        html.H6(children = 'Histogramme de densité de la feature globale',
+                                style={'color': '#000000',
+                                       'fontSize': '15px',
+                                       'text-align': 'center'
+                                      },
+                        ),
+                        html.Div(
+                            children=[
+                                dcc.Graph(id="figuredistributionglobaledensite"),
                             ], 
                         ),
                     ],
@@ -700,6 +754,41 @@ def plotfiguremodelefeature(id, modeleFeature1, modeleFeature2):
     fig.update_layout(width = 450, height = 350)
     
     return [fig]
+
+@app.callback(
+    [
+        Output('figuredistributionfeature1densite', 'figure'),
+        Output('figuredistributionfeature2densite', 'figure'),
+        Output('figuredistributionglobaledensite', 'figure'),
+    ],
+    [
+        Input("id-client1500", "value"),
+        Input("modeleFeature1", "value"),
+        Input("modeleFeature2", "value"),
+    ]
+)
+
+def plotfiguremodelefeaturedensite(id, modeleFeature1, modeleFeature2):
+    
+    data1densite = px.histogram(train_dataWNaN50F1500L, x = modeleFeature1, color = "TARGET",
+                   marginal = "violin", 
+                   hover_data=train_dataWNaN50F1500L.columns, histnorm = 'probability density')
+    
+    data2densite = px.histogram(train_dataWNaN50F1500L, x = modeleFeature2, color = "TARGET",
+                   marginal = "violin", 
+                   hover_data=train_dataWNaN50F1500L.columns, histnorm = 'probability density')
+    
+    dataglobaledensite = px.histogram(train_dataWNaN50F1500L, x = 'TARGET_NEIGHBORS_500_MEAN', color = "TARGET",
+                   marginal = "violin", 
+                   hover_data=train_dataWNaN50F1500L.columns, histnorm = 'probability density')
+    
+    data1densite.update_layout(width = 350, height = 350)
+    
+    data2densite.update_layout(width = 350, height = 350)
+    
+    dataglobaledensite.update_layout(width = 350, height = 350)
+    
+    return data1densite, data2densite, dataglobaledensite
 
 @app.callback(
     [
