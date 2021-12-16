@@ -648,15 +648,15 @@ def plotfiguremodelefeature(id, modeleFeature1, modeleFeature2):
     
     
     data1 = px.histogram(train_dataWNaN50F1500L, x = modeleFeature1, color = "TARGET",
-                   marginal = "box", 
+                   marginal = "violin", 
                    hover_data=train_dataWNaN50F1500L.columns)
     
     data2 = px.histogram(train_dataWNaN50F1500L, x = modeleFeature2, color = "TARGET",
-                   marginal = "box", 
+                   marginal = "violin", 
                    hover_data=train_dataWNaN50F1500L.columns)
     
     dataglobale = px.histogram(train_dataWNaN50F1500L, x = 'TARGET_NEIGHBORS_500_MEAN', color = "TARGET",
-                   marginal = "box", 
+                   marginal = "violin", 
                    hover_data=train_dataWNaN50F1500L.columns)
     
     data1.update_layout(width = 350, height = 350)
