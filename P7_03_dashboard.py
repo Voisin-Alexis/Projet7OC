@@ -149,9 +149,9 @@ app.layout = html.Div(
                             id="id-client",
                             options=[
                                 {"label": IDclient, "value": IDclient}
-                                for IDclient in listeidSort
+                                for IDclient in listeid1500
                             ],
-                            value=listeidSort[0],
+                            value=listeid1500[0],
                             clearable=False,
                             searchable=False,
                             style={'width': '275px'}, 
