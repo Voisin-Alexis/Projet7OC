@@ -42,7 +42,7 @@ y_predProba_lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'y_predProba_lgbmHPS
 
 #lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'lgbmHPSeuil.joblib')
 
-image_filenameG = 'featuresglobaleSHAP5.png'
+image_filenameG = 'featuresglobaleTOP5.png'
 encoded_imageG = base64.b64encode(open(image_filenameG, 'rb').read())
 
 fpr, tpr, thresholds = roc_curve(y_test, y_predProba_lgbmHPSeuil)
