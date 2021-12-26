@@ -111,10 +111,8 @@ En rouge, les variables qui ont un impact positif (contribuent à ce que la pre
  
 Améliorations possibles
 
-enrichissment donnée (exemple revenu du conjoint, revenu foyer, avis d’imposition…)
+Comme nous avons pu voir dans ce projet, nous avons énormément de variable à notre disposition (plus de 1500 dans mon cas, dans un premier temps), cependant ce sont des variables obtenus par agrégation en très grande partie et même si nous avons vu que cela donnait de bons résultats dans notre cas, il serait intéressant d’avoir un enrichissement des données qui collerait mieux. En effet nous avons par exemple les revenus du client qui demande le prêt mais nous n’avons pas les revenus du conjoint ni même ceux du foyer, ni même l’avis d’imposition qui serait très intéressant.
 
-Trop de features qui n’aident pas a l’interprétabilité du modèle
+De même que nous avons beaucoup de variables comme mentionné avant, cela va également nous donner quelques difficultés pour interpréter le modèle, nous sommes en droit de nous poser la question de l’intérêt de certaines variables. 
 
-optimisation de la fonction de coût pas d’influence sur matrice de confusion
-
-D’autres approches plus complexes seraient de remonter cette mesure de calcul de coût métier (avec optimisation du seuil) dans la simulation fine du modèle final choisi, voire pour tous les modèles (cette mesure remplacerait l’AUC)
+Une autre amélioration possible serait de trouver une optimisation de la fonction de coût plus intéressante, bien qu’elle nous donne de bons renseignements dans notre cas, l’optimisation n’a pas d’influence sur la matrice de confusion en elle-même et à moins de faire quelques ajustements elle ne nous sera pas d’une grande aide. Une approche plus complexe serait de remonter cette mesure de calcul de coût métier (avec optimisation du seuil) dans la simulation fine de modèle final choisi, voire pour tous les modèles (cette mesure remplacerait l’AUC).
