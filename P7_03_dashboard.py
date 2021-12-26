@@ -33,14 +33,15 @@ from gevent.pywsgi import WSGIServer
 cheminFichierJoblib = './fichierJoblib/'
 
 y_test = joblib.load(cheminFichierJoblib + 'y_test2.joblib')
-X_testID = joblib.load(cheminFichierJoblib + 'X_testID2.joblib')
-dataframeInfoXTest2 = joblib.load(cheminFichierJoblib + 'dataframeInfoXTest2.joblib')
-listeIndexSort = joblib.load(cheminFichierJoblib + 'listeIndexSort.joblib')
-dfIdClientIndex = joblib.load(cheminFichierJoblib + 'dfIdClientIndex.joblib')
+
+dataframeInfoXTest = joblib.load(cheminFichierJoblib + 'dataframeInfoXTest.joblib')
+importance_dfclassement = joblib.load(cheminFichierJoblib + 'importance_dfclassement.joblib')
+X_testID1500 = joblib.load(cheminFichierJoblib + 'X_testID1500.joblib')
+lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'lgbmHPSeuil.joblib')
+listeidSort = joblib.load(cheminFichierJoblib + 'listeidSort.joblib')
+train_dataWNaN50F1500L = joblib.load(cheminFichierJoblib + 'train_dataWNaN50F1500L.joblib')
 
 y_predProba_lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'y_predProba_lgbmHPSeuil.joblib')
-
-#lgbmHPSeuil = joblib.load(cheminFichierJoblib + 'lgbmHPSeuil.joblib')
 
 image_filenameG = 'featuresglobaleTOP5.png'
 encoded_imageG = base64.b64encode(open(image_filenameG, 'rb').read())
@@ -61,7 +62,20 @@ map_prediction = {0 : 'Positif',
                   1 : 'Négatif'} 
 
 train_dataWNaN50F1500L['Prediction'] = train_dataWNaN50F1500L['Prediction'].map(map_prediction)
-listeidSort = joblib.load(cheminFichierJoblib + 'listeidSort.joblib')
+
+map_prediction = {'Oui' : 'Positif',
+                  'Non' : 'Négatif'} 
+
+X_testID1500['Prediction'] = X_testID1500['Prediction'].map(map_prediction)
+
+train_dataWNaN50F1500L.rename(columns = {'TARGET_NEIGHBORS_500_MEAN':'Clients similaires (durée de remboursement du crédit)', 'EXT_SOURCE_MEAN':'Moyenne des différents scores de sources extérieures', 'DAYS_PAYMENT_RATIO_MAX_MEAN':'Délai de paiement', 'INTEREST_SHARE_MAX_ALL':'Intérêt du crédit', 'EXT_SOURCE_MUL':'Multiplication des différents scores de sources extérieures', 'CNT_CHILDREN':'Nombre d\'enfant', 'AMT_INCOME_TOTAL':'Revenus du client'}, inplace=True)
+listeVariableARemplacer = ['TARGET_NEIGHBORS_500_MEAN', 'EXT_SOURCE_MEAN', 'DAYS_PAYMENT_RATIO_MAX_MEAN', 'INTEREST_SHARE_MAX_ALL', 'EXT_SOURCE_MUL', 'CNT_CHILDREN', 'AMT_INCOME_TOTAL']
+listeVariableRemplacement = ['Clients similaires (durée de remboursement du crédit)', 'Moyenne des différents scores de sources extérieures', 'Délai de paiement', 'Intérêt du crédit', 'Multiplication des différents scores de sources extérieures', 'Nombre d\'enfant', 'Revenus du client']
+
+for i in range(len(listeVariableARemplacer)):
+    for j in range(len(listeClassementVariable)):
+        if listeClassementVariable[j] == listeVariableARemplacer[i]:
+            listeClassementVariable[j] = listeVariableRemplacement[i]    
 
 app = dash.Dash(__name__)
 app.title = "Dashboard Projet 7" #Assigning title to be displayed on tab
@@ -154,21 +168,35 @@ app.layout = html.Div(
         ),
         html.Div(
             children=[
-                html.Div(
-                    children=[
-                        html.Table([
-                            #html.Tr([html.Td(['Confidence: ']), html.Td(id='confidenceAPI')]),
-                            html.Tr([html.Td(['Prediction: ']), html.Td(id='predictionAPI')])                            
-                        ]),
-                    ], 
-                    style={'color': '#000000',                          
-                   'display': 'flex',
-                   'justify-content': 'space-evenly',
-                   'text-align': 'center',
-                   'margin': '25px auto 0 auto'},
-                ),
+                html.Table([
+                    #html.Tr([html.Td(['Confidence: ']), html.Td(id='confidenceAPI')]),
+                    html.Tr([html.Td(['Prediction: '])])                            
+                ]),
             ],
-        ),       
+            style={'display': 'flex',
+                   'textAlign': 'center',
+                   'justify-content': 'space-evenly', 
+                   #'flex-direction': 'row',
+                   'margin': '15px auto 0 auto'
+                   },
+        ),
+        html.Div(
+            children=[
+                html.P(id = 'predictionAPI',
+                                style={'textAlign': 'center',
+                                       'fontSize': 40,
+                                       'font-weight': 'bold',
+                                       #'margin': '0px auto 100px auto'
+                                      }
+                ),
+            ], 
+            style={'display': 'flex',
+                   'textAlign': 'center',
+                   'justify-content': 'space-evenly', 
+                   #'flex-direction': 'row',
+                   'margin': '-40px auto 0 auto'
+                   },
+        ),               
         html.Div(
             children = [
                  html.H6(
@@ -201,7 +229,7 @@ app.layout = html.Div(
              style={'background-color': '#222222',
                     'height': '250px',
                     'padding': '25px 0 0 0',
-                    'margin': '25px auto'},
+                    'margin': '10px auto'},
         ),
         html.Div(
             children=[
@@ -212,9 +240,9 @@ app.layout = html.Div(
                             id="id-client",
                             options=[
                                 {"label": IDclient, "value": IDclient}
-                                for IDclient in listeid1500
+                                for IDclient in listeidSort
                             ],
-                            value=listeid1500[0],
+                            value=listeidSort[0],
                             clearable=False,
                             searchable=False,
                             style={'width': '275px'}, 
@@ -277,15 +305,29 @@ app.layout = html.Div(
                         html.Div(
                             children=[
                                 html.Table([
-                                    html.Tr([html.Td(['Le client reçoit son crédit: ']), html.Td(id='crédit')]),
+                                    html.Tr([html.Td(['Le client reçoit son crédit: '])]),
                                     #html.Tr([html.Td(['(Le seuil optimal est égal à ', round(optimal_threshold, 3), ')'])]),
-                                ]),                
-                            ],                            
+                                ]),
+                                html.P(id = 'crédit',
+                                       style={'textAlign': 'center',
+                                              'font-weight': 'bold',
+                                              'fontSize': 40}
+                               ),  
+                            ],
+                            style={'display': 'flex', 
+                                   'justify-content': 'space-evenly', 
+                                   'flex-direction': 'row',
+                                   'margin': '-20px auto 0 auto'
+                                   },
                         ),
                         html.Div(
                             children=[
                                  dcc.Graph(id = 'figureGauge')             
-                            ],                           
+                            ],
+                            style={'display': 'flex', 
+                                   'justify-content': 'space-evenly', 
+                                   'margin': '-45px auto 0 auto'
+                                   },
                         ),
                     ],
                 ),            
@@ -332,7 +374,6 @@ app.layout = html.Div(
                                    'text-align': 'center',
                                    'margin': '25px auto 0 auto'}, 
                         ),        
-                        
                     ],
                 ),
             ],
@@ -341,7 +382,7 @@ app.layout = html.Div(
                    'flex-direction': 'row',
                    'margin': '0px auto 0 auto'
                    },
-        ),   
+        ),        
         html.Div(
             children = [
                  html.H6(
@@ -377,7 +418,7 @@ app.layout = html.Div(
                                 {"label": feature1, "value": feature1}
                                 for feature1 in listeClassementVariable
                             ],
-                            value='CNT_CHILDREN',
+                            value='Nombre d\'enfant',
                             clearable=False,
                             style={'width': '300px'}, 
                         ),
@@ -392,7 +433,7 @@ app.layout = html.Div(
                                 {"label": feature2, "value": feature2}
                                 for feature2 in listeClassementVariable
                             ],
-                            value='AMT_INCOME_TOTAL',
+                            value='Revenus du client',
                             clearable=False,
                             searchable=False,
                             style={'width': '300px'}, 
@@ -535,11 +576,33 @@ app.layout = html.Div(
                    'flex-direction': 'row',
                    'margin': '0px auto 0 auto'
                    },
-        ),
-        
+        ),          
     ],
 )
 
+
+@app.callback(
+    [
+         #Output('confidenceAPI', 'children'),
+         Output('predictionAPI', 'children')
+    ],
+    [
+        Input("id-clientAPI", "value")
+    ]
+)
+
+def prediction(id):
+    
+    API_URL = 'https://apimodeleprojet7.herokuapp.com/'
+    data_mean = API_URL + "/predictionModeleClient?id=" + str(id)
+    #print(data_mean)
+    response = requests.get(data_mean)
+    content = json.loads(response.content.decode('utf-8'))
+    
+    #confidence = content[0]['confidence']
+    prediction = content[0]['prediction']
+
+    return [prediction]
 
 
 @app.callback(
@@ -553,7 +616,7 @@ app.layout = html.Div(
 
 def prediction(id):
 
-    crédit = X_testID[X_testID['ID'] == id]['Prediction'].values
+    crédit = X_testID1500[X_testID1500['ID'] == id]['Prediction'].values
     
     return [crédit]
 
@@ -573,10 +636,10 @@ def prediction(id):
 
 def prediction(id):
     
-    cntchildren = dataframeInfoXTest2[dataframeInfoXTest2['SK_ID_CURR'] == id]['CNT_CHILDREN'].values    
-    amtincometotal = dataframeInfoXTest2[dataframeInfoXTest2['SK_ID_CURR'] == id]['AMT_INCOME_TOTAL'].values    
-    amtcredit = dataframeInfoXTest2[dataframeInfoXTest2['SK_ID_CURR'] == id]['AMT_CREDIT'].values    
-    amtannuity = dataframeInfoXTest2[dataframeInfoXTest2['SK_ID_CURR'] == id]['AMT_ANNUITY'].values
+    cntchildren = dataframeInfoXTest[dataframeInfoXTest['SK_ID_CURR'] == id]['CNT_CHILDREN'].values    
+    amtincometotal = dataframeInfoXTest[dataframeInfoXTest['SK_ID_CURR'] == id]['AMT_INCOME_TOTAL'].values    
+    amtcredit = dataframeInfoXTest[dataframeInfoXTest['SK_ID_CURR'] == id]['AMT_CREDIT'].values    
+    amtannuity = dataframeInfoXTest[dataframeInfoXTest['SK_ID_CURR'] == id]['AMT_ANNUITY'].values
     
     dureeRemboursement = amtcredit/amtannuity
     dureeRemboursementFloor = math.floor(dureeRemboursement)
@@ -598,7 +661,7 @@ def prediction(id):
 
 def plotfiguregauge(id):
     
-    values =  X_testID[X_testID['ID'] == id]['Score prediction proba'].values
+    values =  X_testID1500[X_testID1500['ID'] == id]['Score prediction proba'].values
 
     fpr, tpr, thresholds = roc_curve(y_test, y_predProba_lgbmHPSeuil)
     optimal_idx = np.argmax(tpr - fpr)
@@ -629,8 +692,8 @@ def plotfiguregauge(id):
     
     figureGauge.update_layout(#autosize = True,
                               font_size = 10,
-                              width = 350,
-                              height = 350)
+                              width = 450,
+                              height = 450)
     
     
     return [go.Figure(data = figureGauge)]
@@ -678,44 +741,97 @@ def positionclient2(id, modeleFeature2):
 
 def positionclientglobale(id):  
     
-    positionclientfeatureglobale = train_dataWNaN50F1500L[train_dataWNaN50F1500L['SK_ID_CURR'] == id]['TARGET_NEIGHBORS_500_MEAN'].values
+    positionclientfeatureglobale = train_dataWNaN50F1500L[train_dataWNaN50F1500L['SK_ID_CURR'] == id]['Clients similaires (durée de remboursement du crédit)'].values
         
     return [positionclientfeatureglobale]
 
 @app.callback(
     [        
-        Output('figuredistributionfeature1', 'figure'),
-        Output('figuredistributionfeature2', 'figure'),
-        Output('figuredistributionglobale', 'figure'),
+        Output('figuredistributionfeature1', 'figure')
     ],
     [
         Input("id-client1500", "value"),
-        Input("modeleFeature1", "value"),
-        Input("modeleFeature2", "value"),
+        Input("modeleFeature1", "value")
     ]
 )
 
-def plotfiguremodelefeature(id, modeleFeature1, modeleFeature2):  
+def plotfiguremodelefeature1(id, modeleFeature1):  
     
-    data1 = px.histogram(train_dataWNaN50F1500L, x = modeleFeature1, color = "Prediction",
-                   marginal = "violin", 
-                   hover_data=train_dataWNaN50F1500L.columns)
+    fig1_0 = train_dataWNaN50F1500L[train_dataWNaN50F1500L['TARGET'] == 0][modeleFeature1].values
+    fig1_1 = train_dataWNaN50F1500L[train_dataWNaN50F1500L['TARGET'] == 1][modeleFeature1].values
     
-    data2 = px.histogram(train_dataWNaN50F1500L, x = modeleFeature2, color = "Prediction",
-                   marginal = "violin", 
-                   hover_data=train_dataWNaN50F1500L.columns)
+    fig1_client =  train_dataWNaN50F1500L[train_dataWNaN50F1500L['SK_ID_CURR'] == id][modeleFeature1].values    
     
-    dataglobale = px.histogram(train_dataWNaN50F1500L, x = 'TARGET_NEIGHBORS_500_MEAN', color = "Prediction",
-                   marginal = "violin", 
-                   hover_data=train_dataWNaN50F1500L.columns)   
+    fig1 = go.Figure()
+    fig1.add_trace(go.Histogram(x = fig1_0, name = 'Positif'))
+    fig1.add_trace(go.Histogram(x = fig1_1, name = 'Négatif'))
+    fig1.add_trace(go.Scatter(x = fig1_client, y = [0],
+                         mode = 'markers',
+                         marker_color = 'red',
+                         name = 'Client'))
     
-    data1.update_layout(width = 550, height = 550)
+    fig1.update_layout(barmode='stack', xaxis_title_text= modeleFeature1, yaxis_title_text='Nombre de Client', width = 550, height = 550)
     
-    data2.update_layout(width = 550, height = 550)
+    return [fig1]
+
+@app.callback(
+    [        
+        Output('figuredistributionfeature2', 'figure')       
+    ],
+    [
+        Input("id-client1500", "value"),
+        Input("modeleFeature2", "value")
+    ]
+)
+
+def plotfiguremodelefeature2(id, modeleFeature2):  
     
-    dataglobale.update_layout(width = 550, height = 550)
+    fig2_0 = train_dataWNaN50F1500L[train_dataWNaN50F1500L['TARGET'] == 0][modeleFeature2].values
+    fig2_1 = train_dataWNaN50F1500L[train_dataWNaN50F1500L['TARGET'] == 1][modeleFeature2].values
     
-    return data1, data2, dataglobale
+    fig2_client =  train_dataWNaN50F1500L[train_dataWNaN50F1500L['SK_ID_CURR'] == id][modeleFeature2].values 
+    
+    fig2 = go.Figure()
+    fig2.add_trace(go.Histogram(x = fig2_0, name = 'Positif'))
+    fig2.add_trace(go.Histogram(x = fig2_1, name = 'Négatif'))
+    fig2.add_trace(go.Scatter(x = fig2_client, y = [0],
+                         mode = 'markers',
+                         marker_color = 'red',
+                         name = 'Client'))
+    
+    fig2.update_layout(barmode='stack', xaxis_title_text= modeleFeature2, yaxis_title_text='Nombre de Client', width = 550, height = 550)
+    
+    
+    return [fig2]
+
+@app.callback(
+    [        
+        Output('figuredistributionglobale', 'figure')
+    ],
+    [
+        Input("id-client1500", "value")
+    ]
+)
+
+def plotfiguremodelefeatureglobale(id):  
+    
+    figglobale_0 = train_dataWNaN50F1500L[train_dataWNaN50F1500L['TARGET'] == 0]['Clients similaires (durée de remboursement du crédit)'].values
+    figglobale_1 = train_dataWNaN50F1500L[train_dataWNaN50F1500L['TARGET'] == 1]['Clients similaires (durée de remboursement du crédit)'].values
+    
+    figglobale_client =  train_dataWNaN50F1500L[train_dataWNaN50F1500L['SK_ID_CURR'] == id]['Clients similaires (durée de remboursement du crédit)'].values    
+    
+    figglobale = go.Figure()
+    figglobale.add_trace(go.Histogram(x = figglobale_0, name = 'Positif'))
+    figglobale.add_trace(go.Histogram(x = figglobale_1, name = 'Négatif'))
+    
+    figglobale.add_trace(go.Scatter(x = figglobale_client, y = [0],
+                         mode = 'markers',
+                         marker_color = 'red',
+                         name = 'Client'))
+    
+    figglobale.update_layout(barmode='stack', xaxis_title_text= 'Clients similaires (durée de remboursement du crédit)', yaxis_title_text='Nombre de Client', width = 550, height = 550)
+    
+    return [figglobale]
 
 @app.callback(
     [
@@ -750,30 +866,6 @@ def plotfiguremodelefeature(id, modeleFeature1, modeleFeature2):
     fig.update_layout(width = 550, height = 550)
     
     return [fig]
-
-
-@app.callback(
-    [
-         #Output('confidenceAPI', 'children'),
-         Output('predictionAPI', 'children')
-    ],
-    [
-        Input("id-clientAPI", "value")
-    ]
-)
-
-def prediction(id):
-    
-    API_URL = 'https://apimodeleprojet7.herokuapp.com/'
-    data_mean = API_URL + "/predictionModeleClient?id=" + str(id)
-    #print(data_mean)
-    response = requests.get(data_mean)
-    content = json.loads(response.content.decode('utf-8'))
-    
-    #confidence = content[0]['confidence']
-    prediction = content[0]['prediction']
-
-    return [prediction]
 
 #==========================================================================================================================#
 
