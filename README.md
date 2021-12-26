@@ -38,77 +38,27 @@ Pour évaluer le problème nous allons donc comparer les valeurs réelles à not
 
 Pour nous aider nous pouvons tracer une matrice de confusion qui nous aidera à nous y retrouver, par exemple nous pourrons avoir cette matrice (j’ai utilisé la matrice qui suit, je considère positive les classes 0, les crédits qui seront remboursés et 1 ceux qui ne le seront pas) :
 
-
-
-
-
-
-
-
-
-
+![Screenshot](vraiematrice.png)
 
 Pour notre projet nous pourrons donc avoir des matrices de ce genre, exemple de la matrice de confusion avec le modèle XGBoost:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![Screenshot](matriceConfusion.png)
 
 
 Pour comparé les modèles nous utiliserons le score AUC, ce score renvoie à l’aire sous la courbe ROC qui représente généralement un taux de vrais positifs sur l’axe Y et un taux de faux positifs sur l’axe X.
 Cela signifie que le coin supérieur gauche du graphique est le point «idéal»: un taux de faux positifs de 0 et un taux de vrais positifs de 1. Ce n'est pas très réaliste, mais cela signifie qu'une plus grande zone sous la courbe (AUC) est généralement meilleure. 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+![Screenshot](roccours.png)
 
 
 Exemple de courbe ROC et du score AUC avec le modèle XGBoost :
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![Screenshot](roc_aucxgboost.png)
 
 Le modèle qui va se démarquer est le modèle LightGBM, qui aura les meilleurs valeurs (pour les différentes métriques) de manière générale.
 
-
+![Screenshot](matriceComparaisonCorrigé.png)
 
 Optimisation métier
 
@@ -131,24 +81,11 @@ Il y a 2 approches à l’interprétabilité, celle dite globale et celle dite l
 
 Exemple explication globale et locale des variables :
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![Screenshot](vraiematrice.png)
 
 Pour l’approche globale nous utiliserons méthode du modèle LGBMClassifier qui est feature_importances_:
 
-
+![Screenshot](VariableGlobaleWfeatureImportance.png)
 
 Pour l’approche locale nous utiliserons SHAP, nous pouvons également l’utiliser pour l’interprétabilité globale. 
 
@@ -167,7 +104,7 @@ Meilleurs Variables Globales
 
 Meilleurs Variables Locales
 
-
+![Screenshot](VariableLocaleShap.png)
 
 En rouge, les variables qui ont un impact positif (contribuent à ce que la prédiction soit plus élevée que la valeur de base, dans notre cas les dossiers remboursés) et, en bleu, celles ayant un impact négatif (contribuent à ce que la prédiction soit plus basse que la valeur de base, dans notre cas les dossiers non remboursés).
 
