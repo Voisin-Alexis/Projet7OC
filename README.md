@@ -1,7 +1,6 @@
 # Projet7
 Projet7 de la formation DataScientist d'Openclassroom
 
-
 Projet
 Implémentez un modèle de scoring.
 
@@ -162,6 +161,8 @@ Ils ont démontré que cette approche respectait les trois propriétés suivante
 
 
 Meilleurs Variables Globales
+
+![Screenshot](featureglobal.png)
 
 
 Meilleurs Variables Locales
